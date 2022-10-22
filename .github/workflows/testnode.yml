@@ -1,0 +1,46 @@
+name: Test CAN Node CI
+
+on:
+  push:    
+    paths:
+      - 'Core/**'
+      - '.github/workflows/testnode.yml'
+  pull_request:
+    branches: [ "main" ]
+    
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install toolchain (arm-none-eabi)
+      run: |
+        sudo apt-get update
+        sudo apt-get install gcc-arm-none-eabi
+      
+    - name: Build debug target
+      run: | 
+        cd Debug/
+        make -j$(nproc) all
+      
+    - name: Get branch name and commit hash
+      run: |
+        echo "branch_name=mcb" >> $GITHUB_ENV
+        echo "commit_hash=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+    - name: Collect build artifacts
+      run: |
+        mkdir build
+        cd build
+        mkdir debug
+        cd ..
+        cp Debug/*.* build/debug
+     
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: build-${{ env.branch_name }}-${{ env.commit_hash }}
+        path: build
