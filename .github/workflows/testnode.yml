@@ -29,7 +29,7 @@ jobs:
       
     - name: Get branch name and commit hash
       run: |
-        echo "branch_name=mcb" >> $GITHUB_ENV
+        echo "branch_name=tnx" >> $GITHUB_ENV
         echo "commit_hash=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
     - name: Collect build artifacts
       run: |
