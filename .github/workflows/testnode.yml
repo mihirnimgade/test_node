@@ -31,6 +31,8 @@ jobs:
       run: |
         echo "branch_name=tnx" >> $GITHUB_ENV
         echo "commit_hash=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+        echo "timestamp=$(date +%Y-%m-%d-%H_%M)" >> $GITHUB_ENV
+        
     - name: Collect build artifacts
       run: |
         mkdir build
@@ -42,5 +44,5 @@ jobs:
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: build-${{ env.branch_name }}-${{ env.commit_hash }}
+        name: build-${{ env.branch_name }}-${{ env.commit_hash }}-${{ env.timestamp }}
         path: build
