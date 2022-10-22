@@ -128,6 +128,21 @@ CAN_TxHeaderTypeDef can_battery_headers[NUM_BATTERY_MSGS] = {
  // <----- Motor Controller Messages ----->
 
 CAN_TxHeaderTypeDef can_motor_headers[NUM_MOTOR_MSGS] = {
+   /**
+	 * ID: 0x401
+     * Data length: 8
+     * Description: Motor Velocity and Current
+	 * Decision: two random 32-bit numbers
+     */
+	{
+		.StdId = 0x0401,
+		.ExtId = 0x0000,
+		.IDE = CAN_ID_STD,
+		.RTR = CAN_RTR_DATA,
+		.DLC = 8,
+		.TransmitGlobalTime = DISABLE
+	},
+
 
    /**
     * ID: 0x501

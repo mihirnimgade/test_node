@@ -139,7 +139,7 @@ void MX_FREERTOS_Init(void) {
 
     sendBatteryMsgHandle = osThreadNew(sendBatteryMsg, NULL, &sendBatteryMsgAttr);
     sendMotorMsgHandle = osThreadNew(sendMotorMsg, NULL, &sendMotorMsgAttr);
-    kernelLEDHandle = osThreadNew(kernelLEDTask, NULL, &kernelLEDAttr);
+    // kernelLEDHandle = osThreadNew(kernelLEDTask, NULL, &kernelLEDAttr);
 
     /* USER CODE END RTOS_THREADS */
 
