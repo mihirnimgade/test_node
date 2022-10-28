@@ -192,21 +192,65 @@ __NO_RETURN void sendMotorMsg(void *argument) {
 __NO_RETURN void sendBatteryMsg(void *argument) {
     CAN_TxHeaderTypeDef rand_header;
 
-    uint8_t rand_data[8] = {0};
+    int8_t rand_data[8] = {0};
     uint32_t rand_index = 0;
     uint16_t rand_delay = MAX_CAN_BATT_TX_DELAY;
 
-    uint8_t rand_soc = 0;
+    int8_t rand_soc = 0;
 
     while (1) {
         rand_index = rand(NUM_BATTERY_MSGS);
         rand_header = can_battery_headers[rand_index];
 
-        if (rand_header.StdId == 0x626) {
+        if (rand_header.StdId == 0x623) {
+            rand_soc = rand(65535);
+            rand_data[0] = rand_soc >> 8;
+            rand_data[1] = rand_soc & rand_data[0];
+
+            rand_soc = rand(255);
+            rand_data[2] = rand_soc;
+
+            rand_soc = rand(255);
+            rand_data[3] = rand_soc;
+
+            rand_soc = rand(255);
+            rand_data[4] = rand_soc;
+
+            rand_soc = rand(255);
+            rand_data[5] = rand_soc;
+        }else if (rand_header.StdId == 0x624) {
+            rand_soc = rand(64000) - 32000;
+            rand_data[0] = rand_soc >> 8;
+            rand_data[1] = rand_soc & rand_data[0];
+
+            rand_soc = rand(65000);
+            rand_data[2] = rand_soc >> 8;
+            rand_data[3] = rand_soc & rand_data[0];
+
+            rand_soc = rand(65000);
+            rand_data[4] = rand_soc >> 8;
+            rand_data[5] = rand_soc & rand_data[0];
+        }
+        else if (rand_header.StdId == 0x626) {
             rand_soc = rand(100);
             rand_data[0] = rand_soc;
+        } else if (rand_header.StdId == 0x627) {
+            rand_soc = rand(254) - 127;
+            rand_data[0] = rand_soc;
+
+            rand_soc = rand(254) - 127;
+            rand_data[2] = rand_soc;
+
+            rand_soc = rand(255);
+            rand_data[3] = rand_soc;
+
+            rand_soc = rand(254) - 127;
+            rand_data[4] = rand_soc;
+
+            rand_soc = rand(255);
+            rand_data[5] = rand_soc;
         } else {
-            rand_array(&rand_data[0], 8);
+            signed_rand_array(&rand_data[0], 8);
         }
 
         free_level = HAL_CAN_GetTxMailboxesFreeLevel(&hcan);
