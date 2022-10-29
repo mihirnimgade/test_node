@@ -133,7 +133,7 @@ CAN_TxHeaderTypeDef can_motor_headers[NUM_MOTOR_MSGS] = {
     * ID: 0x501
     * Data length: 8
     * Description: status information
-    * Decision: two random 32-bit numbers
+    * Decision: three random 16-bit numbers, bits 63-48 reserved
     */
     {
         .StdId = 0x0501,
@@ -149,7 +149,7 @@ CAN_TxHeaderTypeDef can_motor_headers[NUM_MOTOR_MSGS] = {
     * Data length: 8
     *
     * Description: bus voltage and current
-    * Decision: two random 32-bit numbers
+    * Decision: two random 32-bit numbers from 0-300
     */
     {
         .StdId = 0x0502,
@@ -164,7 +164,7 @@ CAN_TxHeaderTypeDef can_motor_headers[NUM_MOTOR_MSGS] = {
     * ID: 0x503
     * Data length: 8
     * Description: motor and vehicle velocity
-    * Decision: two random 32-bit numbers
+    * Decision: two random 32-bit numbers from 0-100
     */
     {
         .StdId = 0x0503,
@@ -177,9 +177,9 @@ CAN_TxHeaderTypeDef can_motor_headers[NUM_MOTOR_MSGS] = {
 
    /**
     * ID: 0x50B
-    * Data length: 8
+    * Data length:
     * Description: motor temperature
-    * Decision: random number from 0-100 is required
+    * Decision: two random 32-bit numbers from 0-100
     */
     {
         .StdId = 0x050B,
