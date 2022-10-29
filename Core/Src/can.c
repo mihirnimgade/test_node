@@ -5,7 +5,6 @@
   *          of the CAN instances.
   ******************************************************************************
   * @attention
-  *
   * <h2><center>&copy; Copyright (c) 2022 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
@@ -143,6 +142,35 @@ CAN_TxHeaderTypeDef can_motor_headers[NUM_MOTOR_MSGS] = {
 		.TransmitGlobalTime = DISABLE
 	},
 
+	 /**
+	   * ID: 0x402
+	   * Data length: 8
+	   * Description: Motor Power
+	   * Decision: two random 32-bit numbers
+	   */
+	 {
+		.StdId = 0x0402,
+		.ExtId = 0x0000,
+		.IDE = CAN_ID_STD,
+		.RTR = CAN_RTR_DATA,
+		.DLC = 8,
+		.TransmitGlobalTime = DISABLE
+	},
+
+	 /**
+	   * ID: 0x500
+	   * Data length: 8
+	   * Description: Tritium ID & Serial number
+	   * Decision: two random 32-bit numbers
+	   */
+	 {
+		.StdId = 0x0500,
+		.ExtId = 0x0000,
+		.IDE = CAN_ID_STD,
+		.RTR = CAN_RTR_DATA,
+		.DLC = 8,
+		.TransmitGlobalTime = DISABLE
+	},
 
    /**
     * ID: 0x501
@@ -190,6 +218,112 @@ CAN_TxHeaderTypeDef can_motor_headers[NUM_MOTOR_MSGS] = {
         .TransmitGlobalTime = DISABLE
     },
 
+	/**
+	* ID: 0x504
+	* Data length: 8
+	* Description: Phase current measurement
+	* Decision: two random 32-bit numbers
+	*/
+	{
+	    .StdId = 0x0504,
+	    .ExtId = 0x0000,
+	    .IDE = CAN_ID_STD,
+	    .RTR = CAN_RTR_DATA,
+	    .DLC = 8,
+	    .TransmitGlobalTime = DISABLE
+	},
+
+	/**
+	* ID: 0x505
+	* Data length: 8
+	* Description: motor voltage vector measurement
+	* Decision: two random 32-bit numbers
+	*/
+	{
+	   .StdId = 0x0505,
+	   .ExtId = 0x0000,
+	   .IDE = CAN_ID_STD,
+	   .RTR = CAN_RTR_DATA,
+	   .DLC = 8,
+	   .TransmitGlobalTime = DISABLE
+	},
+
+	/**
+	* ID: 0x506
+	* Data length: 8
+	* Description: motor current vector measurement
+	* Decision: two random 32-bit numbers
+	*/
+	{
+		.StdId = 0x0506,
+		.ExtId = 0x0000,
+		.IDE = CAN_ID_STD,
+		.RTR = CAN_RTR_DATA,
+		.DLC = 8,
+		.TransmitGlobalTime = DISABLE
+	},
+
+	/**
+    * ID: 0x507
+	* Data length: 8
+	* Description: Motor BackEMF Measurement
+	* Decision: two random 32-bit numbers
+	*/
+	{
+	    .StdId = 0x0507,
+		.ExtId = 0x0000,
+		.IDE = CAN_ID_STD,
+		.RTR = CAN_RTR_DATA,
+		.DLC = 8,
+		.TransmitGlobalTime = DISABLE
+	},
+
+	/**
+	* ID: 0x508
+	* Data length: 8
+	* Description: 15 & 1.65 Voltage Rail Measurement
+	* Decision: two random 32-bit numbers
+	*/
+	{
+	    .StdId = 0x0507,
+		.ExtId = 0x0000,
+		.IDE = CAN_ID_STD,
+		.RTR = CAN_RTR_DATA,
+		.DLC = 8,
+		.TransmitGlobalTime = DISABLE
+	},
+
+	/**
+	* ID: 0x509
+	* Data length: 8
+	* Description: 2.5V & 1.2V Voltage Rail Measurement
+	* Decision: two random 32-bit numbers
+	*/
+	{
+	    .StdId = 0x0509,
+		.ExtId = 0x0000,
+		.IDE = CAN_ID_STD,
+		.RTR = CAN_RTR_DATA,
+		.DLC = 8,
+		.TransmitGlobalTime = DISABLE
+	},
+
+	/**
+	* ID: 0x50A
+	* Data length: 8
+	* Description: Fan Speed Measurement
+	* Decision: two random 32-bit numbers
+	*/
+	{
+	    .StdId = 0x050A,
+		.ExtId = 0x0000,
+		.IDE = CAN_ID_STD,
+		.RTR = CAN_RTR_DATA,
+		.DLC = 8,
+		.TransmitGlobalTime = DISABLE
+	},
+
+
    /**
     * ID: 0x50B
     * Data length: 8
@@ -203,7 +337,52 @@ CAN_TxHeaderTypeDef can_motor_headers[NUM_MOTOR_MSGS] = {
         .RTR = CAN_RTR_DATA,
         .DLC = 8,
         .TransmitGlobalTime = DISABLE
-    }
+    },
+
+	/**
+	* ID: 0x50C
+	* Data length: 8
+	* Description: Air In & CPU Temperature Measurement
+	* Decision: random number from 0-100 is required
+	*/
+	{
+	    .StdId = 0x050C,
+	    .ExtId = 0x0000,
+	    .IDE = CAN_ID_STD,
+	    .RTR = CAN_RTR_DATA,
+	    .DLC = 8,
+	    .TransmitGlobalTime = DISABLE
+	},
+
+	/**
+	* ID: 0x50D
+	* Data length: 8
+	* Description: Air Out & Cap Temperature Measurement
+	* Decision: random number from 0-100 is required
+	*/
+	{
+	    .StdId = 0x050D,
+	    .ExtId = 0x0000,
+	    .IDE = CAN_ID_STD,
+	    .RTR = CAN_RTR_DATA,
+	    .DLC = 8,
+	    .TransmitGlobalTime = DISABLE
+	},
+
+	/**
+	* ID: 0x50E
+	* Data length: 8
+	* Description: Odometer & Bus AmpHours Measurement
+	* Decision: random number from 0-100 is required
+	*/
+	{
+	    .StdId = 0x050E,
+	    .ExtId = 0x0000,
+	    .IDE = CAN_ID_STD,
+	    .RTR = CAN_RTR_DATA,
+	    .DLC = 8,
+	    .TransmitGlobalTime = DISABLE
+	}
 };
 
 /* USER CODE END 0 */
