@@ -30,10 +30,5 @@ void rand_array(uint8_t *array, uint8_t length) {
     }
 }
 
-void signed_rand_array(int8_t *array, uint8_t length) {
-    for (uint8_t i=0; i<length; i++) {
-        array[i] = rand(256);
-    }
-}
 
 
