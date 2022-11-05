@@ -35,7 +35,7 @@
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 
-union FloatBytes {
+typedef union FloatBytes {
 	float float_value;
 	uint8_t bytes[4];
 } FloatBytes;
@@ -104,6 +104,9 @@ uint16_t changing_soc = 0;
 void sendBatteryMsg(void *argument);
 void sendMotorMsg(void *argument);
 void kernelLEDTask(void *argument);
+void simMotorData(uint8_t* data, uint32_t id);
+float rand_float(uint32_t max);
+void addFloat(uint8_t* data, uint32_t max);
 
 /* USER CODE END FunctionPrototypes */
 
@@ -139,7 +142,7 @@ void MX_FREERTOS_Init(void) {
 
     sendBatteryMsgHandle = osThreadNew(sendBatteryMsg, NULL, &sendBatteryMsgAttr);
     sendMotorMsgHandle = osThreadNew(sendMotorMsg, NULL, &sendMotorMsgAttr);
-    kernelLEDHandle = osThreadNew(kernelLEDTask, NULL, &kernelLEDAttr);
+    // kernelLEDHandle = osThreadNew(kernelLEDTask, NULL, &kernelLEDAttr);
 
     /* USER CODE END RTOS_THREADS */
 
@@ -172,7 +175,7 @@ __NO_RETURN void sendMotorMsg(void *argument) {
         rand_index = rand(NUM_MOTOR_MSGS);
         rand_header = can_motor_headers[rand_index];
 
-        rand_array(&rand_data[0], 8);
+        simMotorData(&rand_data[0], rand_header.StdId);
 
         free_level = HAL_CAN_GetTxMailboxesFreeLevel(&hcan);
 
@@ -187,6 +190,68 @@ __NO_RETURN void sendMotorMsg(void *argument) {
         rand_delay = rand(MAX_CAN_MOTOR_TX_DELAY);
         osDelay(rand_delay);
     }
+}
+
+
+typedef union IntBytes {
+	uint16_t int_value;
+	uint8_t bytes[2];
+} IntBytes;
+
+#define MAX_NUM_16_BIT 65536
+#define MAX_FLOAT_50B 100
+#define MAX_FLOAT_503 100
+#define MAX_FLOAT_502 300
+
+void addFloat(uint8_t* data, uint32_t max) {
+	FloatBytes floatA = {0};
+	FloatBytes floatB = {0};
+	floatA.float_value = rand_float(max);
+	floatB.float_value = rand_float(max);
+
+	data[0] = floatA.bytes[0];
+	data[1] = floatA.bytes[1];
+	data[2] = floatA.bytes[2];
+	data[3] = floatA.bytes[3];
+
+	data[4] = floatB.bytes[0];
+	data[5] = floatB.bytes[1];
+	data[6] = floatB.bytes[2];
+	data[7] = floatB.bytes[3];
+}
+
+void simMotorData(uint8_t* data, uint32_t id) {
+	switch(id) {
+		case 0x0502:
+			addFloat(data, MAX_FLOAT_502);
+			break;
+		case 0x0503:
+			addFloat(data, MAX_FLOAT_503);
+			break;
+		case 0x50B:
+			addFloat(data, MAX_FLOAT_50B);
+			break;
+		case 0x0501:;
+			IntBytes intA = {0};
+			IntBytes intB = {0};
+			IntBytes intC = {0};
+			intA.int_value = rand(MAX_NUM_16_BIT);
+			intB.int_value = rand(MAX_NUM_16_BIT);
+			intC.int_value = rand(MAX_NUM_16_BIT);
+
+			data[0] = intA.bytes[0];
+			data[1] = intA.bytes[1];
+			data[2] = intB.bytes[0];
+			data[3] = intB.bytes[1];
+			data[4] = intC.bytes[0];
+			data[5] = intC.bytes[1];
+			// data[6] and 7 are reserved
+			break;
+	};
+}
+
+float rand_float(uint32_t max) {
+	return (rand(MAX_NUM_16_BIT) / (float) MAX_NUM_16_BIT) * max;
 }
 
 __NO_RETURN void sendBatteryMsg(void *argument) {
