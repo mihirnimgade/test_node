@@ -34,6 +34,10 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
+union IntBytes {
+    int16_t int_value;
+    uint8_t bytes[2];
+} IntBytes;
 
 union FloatBytes {
 	float float_value;
@@ -104,7 +108,8 @@ uint16_t changing_soc = 0;
 void sendBatteryMsg(void *argument);
 void sendMotorMsg(void *argument);
 void kernelLEDTask(void *argument);
-
+void addSignedInt(uint8_t* data, uint32_t max);
+void addInt(uint8_t* data, uint32_t max);
 /* USER CODE END FunctionPrototypes */
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
@@ -189,10 +194,26 @@ __NO_RETURN void sendMotorMsg(void *argument) {
     }
 }
 
+void addSignedInt(uint8_t* data, uint32_t max) {
+    union IntBytes intA = {0};
+    intA.int_value = rand(2 * max) - max;
+
+    data[0] = intA.bytes[0];
+    data[1] = intA.bytes[1];
+}
+
+void addInt(uint8_t* data, uint32_t max) {
+    union IntBytes intA = {0};
+    intA.int_value = rand(max);
+
+    data[0] = intA.bytes[0];
+    data[1] = intA.bytes[1];
+}
+
 __NO_RETURN void sendBatteryMsg(void *argument) {
     CAN_TxHeaderTypeDef rand_header;
 
-    int8_t rand_data[8] = {0};
+    uint8_t rand_data[8] = {0};
     uint32_t rand_index = 0;
     uint16_t rand_delay = MAX_CAN_BATT_TX_DELAY;
 
@@ -219,17 +240,9 @@ __NO_RETURN void sendBatteryMsg(void *argument) {
             rand_soc = rand(255);
             rand_data[5] = rand_soc;
         }else if (rand_header.StdId == 0x624) {
-            rand_soc = rand(64000) - 32000;
-            rand_data[0] = rand_soc >> 8;
-            rand_data[1] = rand_soc & rand_data[0];
-
-            rand_soc = rand(65000);
-            rand_data[2] = rand_soc >> 8;
-            rand_data[3] = rand_soc & rand_data[0];
-
-            rand_soc = rand(65000);
-            rand_data[4] = rand_soc >> 8;
-            rand_data[5] = rand_soc & rand_data[0];
+            addSignedInt(rand_data, 32000);
+            addInt(&rand_data[2], 65000);
+            addInt(&rand_data[4], 65000);
         }
         else if (rand_header.StdId == 0x626) {
             rand_soc = rand(100);
@@ -250,7 +263,7 @@ __NO_RETURN void sendBatteryMsg(void *argument) {
             rand_soc = rand(255);
             rand_data[5] = rand_soc;
         } else {
-            signed_rand_array(&rand_data[0], 8);
+            rand_array(&rand_data[0], 8);
         }
 
         free_level = HAL_CAN_GetTxMailboxesFreeLevel(&hcan);
